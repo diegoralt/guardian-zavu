@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guardián</title>
+<style>
+  :root { --bg:#f6f6f4; --card:#fff; --fg:#1b1b1b; --muted:#6b6b6b; --me:#1f6feb; --me-fg:#fff; --bot:#ececea; --line:#dcdcd8; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111213; --card:#1a1b1d; --fg:#ececec; --muted:#9a9a9a; --me:#3b82f6; --me-fg:#fff; --bot:#26282b; --line:#2e3034; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+  main { max-width:680px; margin:0 auto; height:100dvh; display:flex; flex-direction:column; padding:0 16px; }
+  header { padding:16px 0 8px; } h1 { margin:0; font-size:20px; } header p { margin:2px 0 0; color:var(--muted); font-size:14px; }
+  #log { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding:8px 0; }
+  .m { max-width:85%; padding:9px 13px; border-radius:16px; white-space:pre-wrap; word-wrap:break-word; }
+  .user { align-self:flex-end; background:var(--me); color:var(--me-fg); border-bottom-right-radius:4px; }
+  .assistant { align-self:flex-start; background:var(--bot); border-bottom-left-radius:4px; }
+  .typing { color:var(--muted); font-style:italic; }
+  form { display:flex; gap:8px; padding:12px 0 16px; border-top:1px solid var(--line); }
+  input { flex:1; min-width:0; padding:11px 14px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--fg); font:inherit; }
+  button { padding:0 18px; border:0; border-radius:999px; background:var(--me); color:var(--me-fg); font:inherit; font-weight:600; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:default; }
+  input:focus-visible, button:focus-visible { outline:2px solid var(--me); outline-offset:2px; }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<main>
+  <header><h1>Guardián</h1><p>Guardo un secreto. Platica conmigo de lo que quieras.</p></header>
+  <div id="log" role="log" aria-live="polite"></div>
+  <form id="f">
+    <label for="q" class="sr">Mensaje</label>
+    <input id="q" autocomplete="off" placeholder="Escribe un mensaje…" required maxlength="2000">
+    <button id="b">Enviar</button>
+  </form>
+</main>
+<script>
+  const log = document.getElementById('log'), f = document.getElementById('f'), q = document.getElementById('q'), b = document.getElementById('b');
+  const history = [];
+  const add = (role, text, cls = '') => { const d = document.createElement('div'); d.className = `m ${role} ${cls}`; d.textContent = text; log.append(d); log.scrollTop = log.scrollHeight; return d; };
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = q.value.trim(); if (!text) return;
+    q.value = ''; b.disabled = true;
+    history.push({ role: 'user', content: text }); add('user', text);
+    const t = add('assistant', 'Pensando…', 'typing');
+    let reply;
+    try {
+      const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history.slice(-6) }) });
+      reply = (await r.json()).reply || 'Uy, me distraje. ¿Me lo repites?';
+    } catch { reply = 'Uy, se cortó la conexión. ¿Lo intentamos de nuevo?'; }
+    t.remove(); add('assistant', reply); history.push({ role: 'assistant', content: reply });
+    b.disabled = false; q.focus();
+  });
+</script>
+</body>
+</html>
