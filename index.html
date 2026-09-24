@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guardián</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
 <style>
   :root { --bg:#f6f6f4; --card:#fff; --fg:#1b1b1b; --muted:#6b6b6b; --me:#1f6feb; --me-fg:#fff; --bot:#ececea; --line:#dcdcd8; }
   @media (prefers-color-scheme: dark) { :root { --bg:#111213; --card:#1a1b1d; --fg:#ececec; --muted:#9a9a9a; --me:#3b82f6; --me-fg:#fff; --bot:#26282b; --line:#2e3034; } }
@@ -26,7 +27,7 @@
 </head>
 <body>
 <main>
-  <header><h1>Guardián</h1><p>Guardo un secreto. Platica conmigo de lo que quieras.</p></header>
+  <header><h1>🔒 Guardián</h1><p>Guardo un secreto. Platica conmigo de lo que quieras.</p></header>
   <div id="log" role="log" aria-live="polite"></div>
   <form id="f">
     <label for="q" class="sr">Mensaje</label>
@@ -37,7 +38,8 @@
 <script>
   const log = document.getElementById('log'), f = document.getElementById('f'), q = document.getElementById('q'), b = document.getElementById('b');
   const history = [];
-  const add = (role, text, cls = '') => { const d = document.createElement('div'); d.className = `m ${role} ${cls}`; d.textContent = text; log.append(d); log.scrollTop = log.scrollHeight; return d; };
+  const add = (role, text, cls = '') => { const d = document.createElement('div'); d.className = `m ${role} ${cls}`; text.split(/\*\*(.+?)\*\*/g).forEach((s, i) => { const n = i % 2 ? document.createElement('strong') : document.createTextNode(s.replace(/^#+\s*/gm, '')); if (i % 2) n.textContent = s; d.append(n); }); log.append(d); log.scrollTop = log.scrollHeight; return d; };
+  add('assistant', '¡Hola! Soy el Guardián 🔒 Sí, guardo un secreto (y ahí se queda). Pero platícame de lo que quieras: recetas, viajes, ciencia, chistes…');
   f.addEventListener('submit', async (e) => {
     e.preventDefault();
     const text = q.value.trim(); if (!text) return;
