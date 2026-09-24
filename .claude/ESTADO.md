@@ -8,6 +8,7 @@
 - Auditoría en vivo: 28 ataques, 0 filtraciones, 1 fallback legítimo. Fixes aplicados y desplegados: rate limit a 300/min (NAT), maxDuration 30, filtro morse/braille/katakana/cirílico/etc., fallback de modelo en OpenRouter, historial y dedupe en el webhook de WhatsApp.
 - Red team simulado (Sonnet, 41/41 PASS); sus 7 mejoras ya están en el prompt y el juez (el juez ahora ve la última pregunta; hay logs de LEAK) y desplegadas.
 
+- Top 10 ataques de attacks.md probados contra nuestro bot: 0 fugas completas. Se corrigió una fuga parcial ("empieza con Z" en un ejemplo "genérico") en el prompt (regla 8) y en el juez.
 - UI: saludo inicial, negritas renderizadas sin innerHTML, favicon (verificado en navegador).
 - Repo público: https://github.com/diegoralt/guardian-zavu.
 
