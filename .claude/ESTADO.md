@@ -7,7 +7,7 @@
 - Repo público de solo referencia: README y SECURITY.md actualizados, ruleset `protect-main` (sin force-push ni borrado), Issues y Projects desactivados, secret scanning y push protection activos.
 
 ## Siguiente acción
-- Ninguna obligatoria. Recomendado: revocar en OpenRouter la API key que usaba el deploy.
+- Ninguna. Proyecto cerrado (key de OpenRouter revocada).
 
 ## Decisiones abiertas
 - Ninguna.
