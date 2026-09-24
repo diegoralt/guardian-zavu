@@ -5,7 +5,7 @@ export const config = { maxDuration: 30 };
 // ponytail: rate limit en memoria por instancia; en serverless cada instancia fría
 // empieza en cero y no se comparte entre instancias. Usar Vercel KV/Upstash si importa.
 const hits = new Map();
-const LIMIT = 300; // ponytail: techo anti-abuso de créditos, no por usuario; los atacantes pueden compartir IP (NAT)
+const LIMIT = 40; // ponytail: un humano no pasa de ~12/min (latencia 4-9 s); frena scripts que vacían el crédito de OpenRouter. Evento remoto: sin NAT compartido
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
